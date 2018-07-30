@@ -21,7 +21,7 @@ public class CvsConvertorTest {
     @Test
     public void createBankListFromFile() throws Exception {
 
-        cvsConvertor.createBankListFromFile("com/mohammadreza_mirali/cvs_to_db_demo/Manager/test.csv") ;
+
     }
 
 }
