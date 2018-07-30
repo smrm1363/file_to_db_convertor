@@ -1,12 +1,15 @@
 package com.mohammadreza_mirali.cvs_to_db_demo;
 
-import org.springframework.boot.CommandLineRunner;
+import com.mohammadreza_mirali.cvs_to_db_demo.Manager.CvsConvertor;
+import com.mohammadreza_mirali.cvs_to_db_demo.dao.BankDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.Scanner;
 
 @SpringBootApplication
 public class CvsToDbDemoApplication {
@@ -15,18 +18,19 @@ public class CvsToDbDemoApplication {
 		SpringApplication.run(CvsToDbDemoApplication.class, args);
 	}
 
-	@Bean
-	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-		return args -> {
 
-			System.out.println("Let's inspect the beans provided by Spring Boot:");
+@Autowired
+CvsConvertor cvsConvertor;
+@Autowired
+BankDao bankDao;
 
-			String[] beanNames = ctx.getBeanDefinitionNames();
-			Arrays.sort(beanNames);
-			for (String beanName : beanNames) {
-				System.out.println(beanName);
-			}
+	@EventListener(ApplicationReadyEvent.class)
+	public void doSomethingAfterStartup() throws IOException {
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Enter the csv file path : ");
+		String path = scanner.next();
+		cvsConvertor.convertToDb(path);
+		System.out.println("The selected data from PostgreSQL Database where its identifier is 10040000 : "+bankDao.getBankById(10010010).getName());
 
-		};
 	}
 }
